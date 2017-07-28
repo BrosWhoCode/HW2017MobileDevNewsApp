@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="5dp"
+              android:descendantFocusability="blocksDescendants" >
+    <!--- Note that "descendantFocusability" is because of ImageView stealing focus from the row.
+    see: https://stackoverflow.com/questions/11428303/cant-click-on-listview-row-with-imagebutton -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/article_title_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="22dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"/>
+
+        <ImageButton
+            android:id="@+id/share_button"
+            android:layout_margin="5dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/colorShareButton"
+            android:src="@drawable/ic_bookmark_border_black_24dp"
+            android:layout_gravity="center_vertical"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/article_thumbnail"
+            android:layout_width="140dp"
+            android:layout_height="100dp"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/article_body_text_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center_vertical"
+            android:textSize="16dp"
+            android:maxLines="5"
+            android:ellipsize="end"/>
+
+    </LinearLayout>
+</LinearLayout>
