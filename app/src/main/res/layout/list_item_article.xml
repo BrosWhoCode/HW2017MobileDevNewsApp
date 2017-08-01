@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:padding="5dp"
               android:descendantFocusability="blocksDescendants" >
-    <!--- Note that "descendantFocusability" is because of ImageView stealing focus from the row.
+    <!--- Note that "descendantFocusability" is because of ImageButton stealing focus from the row.
     see: https://stackoverflow.com/questions/11428303/cant-click-on-listview-row-with-imagebutton -->
 
     <LinearLayout

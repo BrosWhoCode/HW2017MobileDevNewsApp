@@ -13,13 +13,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class NewsSource {
     private static final int IMAGE_CACHE_COUNT = 100;
@@ -136,15 +144,59 @@ public class NewsSource {
 
     //====FIREBASE METHODS
 
+    public void getSharedArticles(final ArticleListener articleListener) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference articlesRef = databaseRef.child("articles");
+        articlesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<SharedArticle> sharedArticles = new ArrayList<>();
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                for (DataSnapshot articleSnapshot : iter) {
+                    SharedArticle sharedArticle = new SharedArticle(articleSnapshot);
+                    sharedArticles.add(sharedArticle);
+                }
+                articleListener.onArticlesReceived(sharedArticles);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void getMySharedArticles(final ArticleListener articleListener) {
 
     }
 
-    public void getSharedArticles(final ArticleListener articleListener) {
+    public void shareArticle(SharedArticle sharedArticle) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference articlesRef = databaseRef.child("articles");
+        DatabaseReference newArticleRef = articlesRef.push();
+
+        Map<String,String> articleValMap = new HashMap<>();
+        articleValMap.put("title", sharedArticle.getTitle());
+        articleValMap.put("url", sharedArticle.getArticleUrl());
+        articleValMap.put("imgUrl", sharedArticle.getImageUrl());
+        articleValMap.put("userId", sharedArticle.getUserId());
+        articleValMap.put("userComment", sharedArticle.getUserComment());
+        articleValMap.put("userName", sharedArticle.getUserName());
+
+        newArticleRef.setValue(articleValMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError == null) {
+                    Toast.makeText(mContext, "share complete!", Toast.LENGTH_SHORT).show();
+                } else {
+
+                }
+            }
+        });
 
     }
 
-    public void shareArticle(SharedArticle article) {
+    public void unshareArticle(SharedArticle sharedArticle) {
 
     }
 

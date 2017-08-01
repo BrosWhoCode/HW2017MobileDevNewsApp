@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class BrowseArticleListFragment extends BaseArticleListFragment {
         return v;
     }
 
-    private void shareArticle(Article article) {
+    private void shareArticle(final Article article) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_edit_text, null);
         final EditText commentEditText = (EditText) view.findViewById(R.id.edit_text);
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
@@ -55,6 +57,15 @@ public class BrowseArticleListFragment extends BaseArticleListFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // actually post the article to Firebase
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user == null) {
+                            //error
+                        }
+                        String userName = user.getDisplayName();
+                        String userId = user.getUid();
+                        String comment = commentEditText.getText().toString();
+                        SharedArticle sharedArticle = new SharedArticle(article, userName, userId, comment);
+                        NewsSource.get(getContext()).shareArticle(sharedArticle);
                     }
                 })
                 .create();
