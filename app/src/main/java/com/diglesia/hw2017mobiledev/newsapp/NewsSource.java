@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
@@ -166,8 +167,28 @@ public class NewsSource {
         });
     }
 
-    public void getMySharedArticles(final ArticleListener articleListener) {
+    public void getMySharedArticles(String userId, final ArticleListener articleListener) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference articlesRef = databaseRef.child("articles");
+        Query myArticlesQuery = articlesRef.orderByChild("userId").equalTo(userId);
 
+        myArticlesQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<SharedArticle> sharedArticles = new ArrayList<>();
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                for (DataSnapshot articleSnapshot : iter) {
+                    SharedArticle sharedArticle = new SharedArticle(articleSnapshot);
+                    sharedArticles.add(sharedArticle);
+                }
+                articleListener.onArticlesReceived(sharedArticles);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void shareArticle(SharedArticle sharedArticle) {
@@ -197,7 +218,10 @@ public class NewsSource {
     }
 
     public void unshareArticle(SharedArticle sharedArticle) {
-
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference articlesRef = databaseRef.child("articles");
+        DatabaseReference articleRef = articlesRef.child(sharedArticle.getFirebaseKey());
+        articleRef.removeValue();
     }
 
 

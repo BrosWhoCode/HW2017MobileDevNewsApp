@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -20,10 +22,15 @@ public class MySharedArticlesListFragment extends BaseArticleListFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         // Logic specific to this subclass
-        NewsSource.get(getContext()).getMySharedArticles(new NewsSource.ArticleListener() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            //error, show toast
+            return v;
+        }
+        NewsSource.get(mContext).getMySharedArticles(user.getUid(), new NewsSource.ArticleListener() {
             @Override
             public void onArticlesReceived(List<? extends Article> articles) {
-                MySharedArticleAdapter adapter = new MySharedArticleAdapter(getContext(), articles);
+                MySharedArticleAdapter adapter = new MySharedArticleAdapter(mContext, articles);
                 mListView.setAdapter(adapter);
             }
         });
@@ -32,7 +39,7 @@ public class MySharedArticlesListFragment extends BaseArticleListFragment {
     }
 
     private void unshareArticle(SharedArticle article) {
-
+        NewsSource.get(mContext).unshareArticle(article);
     }
 
     private class MySharedArticleAdapter extends ArticleAdapter {

@@ -35,10 +35,10 @@ public class BrowseArticleListFragment extends BaseArticleListFragment {
 
         // Logic specific to this subclass
         String sourceId = getArguments().getString(SOURCE_ID_KEY);
-        NewsSource.get(getContext()).getArticles(sourceId, new NewsSource.ArticleListener() {
+        NewsSource.get(mContext).getArticles(sourceId, new NewsSource.ArticleListener() {
             @Override
             public void onArticlesReceived(List<? extends Article> articles) {
-                BrowseArticleAdapter adapter = new BrowseArticleAdapter(getContext(), articles);
+                BrowseArticleAdapter adapter = new BrowseArticleAdapter(mContext, articles);
                 mListView.setAdapter(adapter);
             }
         });
@@ -65,7 +65,7 @@ public class BrowseArticleListFragment extends BaseArticleListFragment {
                         String userId = user.getUid();
                         String comment = commentEditText.getText().toString();
                         SharedArticle sharedArticle = new SharedArticle(article, userName, userId, comment);
-                        NewsSource.get(getContext()).shareArticle(sharedArticle);
+                        NewsSource.get(mContext).shareArticle(sharedArticle);
                     }
                 })
                 .create();

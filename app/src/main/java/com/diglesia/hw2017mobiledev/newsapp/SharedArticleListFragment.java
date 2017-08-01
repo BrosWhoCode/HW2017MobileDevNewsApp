@@ -20,10 +20,10 @@ public class SharedArticleListFragment extends BaseArticleListFragment {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
         // Logic specific to this subclass
-        NewsSource.get(getContext()).getSharedArticles(new NewsSource.ArticleListener() {
+        NewsSource.get(mContext).getSharedArticles(new NewsSource.ArticleListener() {
             @Override
             public void onArticlesReceived(List<? extends Article> articles) {
-                SharedArticleAdapter adapter = new SharedArticleAdapter(getContext(), articles);
+                SharedArticleAdapter adapter = new SharedArticleAdapter(mContext, articles);
                 mListView.setAdapter(adapter);
             }
         });

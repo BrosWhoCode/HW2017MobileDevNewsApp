@@ -1,5 +1,6 @@
 package com.diglesia.hw2017mobiledev.newsapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,13 @@ import android.widget.ListView;
 public abstract class BaseArticleListFragment extends Fragment {
 
     protected ListView mListView;
+    protected Context mContext; // Held so that it is available even while Fragment is detached (and getContext() would be null)
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
