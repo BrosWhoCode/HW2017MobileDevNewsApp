@@ -179,6 +179,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i("DEI", "app started");
+        // Stop the service
+        Intent i = new Intent(this, NewsAppNotificationService.class);
+        stopService(i);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i("DEI", "app stopped");
+        // Start the service
+        Intent i = new Intent(this, NewsAppNotificationService.class);
+        startService(i);
+    }
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
